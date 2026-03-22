@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Generate printable symptom trackers, self-care worksheets, quote cards, phone wallpapers, social media graphics, infographics, affirmation cards, and spoon theory explainers for fibromyalgia awareness.">
+  <title>FibroDesign — Fibromyalgia Digital Product Generator</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-inner">
+        <a href="#" class="nav-brand" id="nav-brand">
+          <span class="nav-brand-icon">💜</span>
+          FibroDesign
+        </a>
+        <button class="nav-back hidden" id="nav-back">
+          ← Back to Dashboard
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Dashboard View -->
+      <div id="view-dashboard">
+        <div class="dashboard-header">
+          <h1>Fibromyalgia Design Studio</h1>
+          <p>Generate beautiful, ready-to-use digital products for fibromyalgia awareness, self-care, and support. No design experience needed.</p>
+        </div>
+        <div class="dashboard-grid" id="dashboard-grid"></div>
+      </div>
+
+      <!-- Generator Views -->
+      <div id="view-symptom-tracker" class="generator-view"></div>
+      <div id="view-self-care" class="generator-view"></div>
+      <div id="view-quote-cards" class="generator-view"></div>
+      <div id="view-phone-wallpapers" class="generator-view"></div>
+      <div id="view-social-media" class="generator-view"></div>
+      <div id="view-infographics" class="generator-view"></div>
+      <div id="view-affirmation-cards" class="generator-view"></div>
+      <div id="view-spoon-theory" class="generator-view"></div>
+    </main>
+  </div>
+
+  <!-- html2canvas CDN for PNG export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="js/bundle.js"></script>
+</body>
+</html>

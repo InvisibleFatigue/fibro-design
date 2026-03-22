@@ -1,0 +1,132 @@
+// ============================================================
+// Self-Care Worksheet Generator
+// ============================================================
+import { SELF_CARE_PROMPTS } from '../data/content.js';
+import { downloadAsPNG, printDesign } from '../export.js';
+
+export function renderSelfCareWorksheets(container) {
+  container.innerHTML = `
+    <div class="generator-header">
+      <h2>📝 Self-Care Worksheets</h2>
+      <p>Printable worksheets for trigger identification, energy conservation planning, and flare-up preparation.</p>
+    </div>
+
+    <div class="controls-panel">
+      <div class="controls-row">
+        <div class="control-group">
+          <label>Worksheet Type</label>
+          <select id="worksheet-type">
+            <option value="triggers">Identify Your Triggers</option>
+            <option value="energy">Energy Conservation Planning</option>
+            <option value="flareup">Flare-Up Preparation</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Accent Color</label>
+          <input type="color" id="worksheet-color" value="#7e22ce">
+        </div>
+      </div>
+      <div class="btn-group mt-lg">
+        <button class="btn btn-primary" id="ws-generate">🔄 Generate</button>
+        <button class="btn btn-teal btn-downloading" id="ws-download">📥 Download PNG</button>
+        <button class="btn btn-secondary" id="ws-print">🖨️ Print</button>
+      </div>
+    </div>
+
+    <div class="preview-area">
+      <h3>Preview</h3>
+      <div class="design-canvas" id="ws-canvas"></div>
+    </div>
+  `;
+
+  container.querySelector('#worksheet-type').addEventListener('change', generate);
+  container.querySelector('#worksheet-color').addEventListener('input', generate);
+  container.querySelector('#ws-generate').addEventListener('click', generate);
+  container.querySelector('#ws-download').addEventListener('click', () => {
+    downloadAsPNG(container.querySelector('#ws-canvas'), 'fibro-self-care-worksheet');
+  });
+  container.querySelector('#ws-print').addEventListener('click', printDesign);
+
+  function generate() {
+    const type = container.querySelector('#worksheet-type').value;
+    const color = container.querySelector('#worksheet-color').value;
+    const canvas = container.querySelector('#ws-canvas');
+
+    const configs = {
+      triggers: {
+        title: 'Identify Your Triggers',
+        subtitle: 'Understanding what worsens your symptoms is the first step to managing them.',
+        icon: '🎯',
+        prompts: SELF_CARE_PROMPTS.triggers,
+        usePrompts: true,
+      },
+      energy: {
+        title: 'Energy Conservation Planning',
+        subtitle: 'Plan your day around your energy levels. Every spoon counts.',
+        icon: '⚡',
+        prompts: SELF_CARE_PROMPTS.energyConservation,
+        useChecklist: true,
+        extraSections: [
+          { title: "Today's Top 3 Priorities", lines: 3 },
+          { title: 'Rest Break Schedule', lines: 4 },
+          { title: 'Tasks I Can Delegate', lines: 3 },
+        ],
+      },
+      flareup: {
+        title: 'Flare-Up Preparation Plan',
+        subtitle: 'Being prepared for flare-ups reduces anxiety and helps you recover faster.',
+        icon: '🛡️',
+        prompts: SELF_CARE_PROMPTS.flareUp,
+        useChecklist: true,
+        extraSections: [
+          { title: 'Emergency Contact', lines: 2 },
+          { title: 'What Helps Me Most During a Flare', lines: 4 },
+          { title: 'Comforting Activities / Distractions', lines: 3 },
+        ],
+      },
+    };
+
+    const config = configs[type];
+    let html = `<div class="worksheet-page">`;
+    html += `<div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
+      <span style="font-size:2rem;">${config.icon}</span>
+      <h2 style="color:${color}">${config.title}</h2>
+    </div>`;
+    html += `<p class="subtitle">${config.subtitle}</p>`;
+
+    if (config.usePrompts) {
+      config.prompts.forEach((prompt, i) => {
+        html += `<div class="worksheet-prompt">
+          <p><span style="color:${color}; font-weight:700;">${i + 1}.</span> ${prompt}</p>
+          <div class="answer-area" style="border-color:${color}44"></div>
+        </div>`;
+      });
+    }
+
+    if (config.useChecklist) {
+      html += `<div class="tracker-section"><h3 style="border-color:${color}33">Checklist</h3>`;
+      html += `<ul class="worksheet-checklist">`;
+      config.prompts.forEach(item => {
+        html += `<li>${item}</li>`;
+      });
+      html += `</ul></div>`;
+    }
+
+    if (config.extraSections) {
+      config.extraSections.forEach(section => {
+        html += `<div class="tracker-section"><h3 style="border-color:${color}33">${section.title}</h3>`;
+        html += `<div class="notes-lines">`;
+        for (let i = 0; i < section.lines; i++) html += `<div class="note-line"></div>`;
+        html += `</div></div>`;
+      });
+    }
+
+    html += `<div style="text-align:center; margin-top:1.5rem; font-size:0.7rem; color:#94a3b8;">
+      Generated by FibroDesign • fibromyalgia awareness & self-care tools</div>`;
+    html += `</div>`;
+
+    canvas.innerHTML = html;
+  }
+
+  generate();
+}
